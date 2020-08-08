@@ -13,7 +13,7 @@ import argparse
 
 from imdb import IMDb
 
-def IMDB_series_plotter(input_series, output, dpi=150):
+def IMDB_series_plotter(input_series, output, cmap, dpi=150):
     # create an instance of the IMDb class
     ia = IMDb()
     
@@ -74,7 +74,7 @@ def IMDB_series_plotter(input_series, output, dpi=150):
     np_rating = np.insert(np_rating, 0, np.arange(0,np_rating.shape[0]), axis=1)
     np_rating[0,0] = np.nan
     np_rating = np.transpose(np_rating)
-    
+
     np_votes = np.insert(np_votes, 0, np.arange(1,np_votes.shape[1]+1), axis=0)
     np_votes = np.insert(np_votes, 0, np.arange(0,np_votes.shape[0]), axis=1)
     np_votes[0,0] = np.nan
@@ -93,34 +93,39 @@ def IMDB_series_plotter(input_series, output, dpi=150):
     sns.heatmap(np_rating,
                 mask = mask,
                 square = True,
-                linewidths = 10,
+                linewidths = 1,
                 cbar=False,
                 cmap = 'Greys',
                 vmin = -100,
                 vmax = 1,
                 annot = True,
-                annot_kws = {'size': 12},
+                annot_kws = {'size': 24},
+                cbar_kws={"shrink": .5},
                 zorder=1)
     
     mask[:,0] = True
     mask[0,:] = True
-    
+
+    #User defined colormap or default to RdYlGn
+    if not cmap: cmap = 'RdYlGn'
+
     sns.heatmap(np_rating,
                 mask = mask,
                 square = True,
-                linewidths = 10,
+                linewidths = 1,
                 cbar=False,
-                cmap = 'RdYlGn',
-                vmin = 6.8,
-                vmax = 9.2,
+                cmap = cmap,
+                vmin = 6.4,
+                vmax = 9.5,
                 annot = True,
-                annot_kws = {'size': 12},
+                annot_kws = {'size': 24},
+                cbar_kws = {"shrink": .5},
                 zorder=2)
   
     
-    ax.set_title(series['long imdb title'],fontsize=24)
-    ax.set_ylabel('Chapter', fontsize=18)
-    ax.set_xlabel('Season', fontsize=18)
+    ax.set_title(series['long imdb title'],fontsize=14)
+    ax.set_ylabel('Episode', fontsize=12)
+    ax.set_xlabel('Season', fontsize=12)
     ax.xaxis.set_label_position('top') 
     
     #We remove the axis ticks from the plot
@@ -140,6 +145,7 @@ if __name__ == '__main__':
         '-i', '--input', type=str, help='An IMDB ID for a series or the name of a series')
     parser.add_argument(
         '-o', '--output', type=str, help='The output path for the plot, can be relative or absolute')
-
+    parser.add_argument(
+        '-c', '--cmap', type=str, help='(Optional) The Matplotlib colormap to use')
     args = parser.parse_args()
-    IMDB_series_plotter(args.input, args.output)
+    IMDB_series_plotter(args.input, args.output, args.cmap)
