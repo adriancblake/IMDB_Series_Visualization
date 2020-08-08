@@ -6,7 +6,7 @@ run main.py with either the IMDB's ID (numerical) of the desired series or the n
 
 # Examples
 ```shell
-$ python ./main.py -i "Dr House" -o drhouse.png
+$ python ./main.py -i "Dr House" -o drhouse.png -c "Greens"
 ```
 ![drhouse.png](https://imgur.com/hKlSu5e.png)
 
